@@ -8,7 +8,11 @@ use Symfony\Component\HttpFoundation\Response;
 //Класс, позволяющий настраивать маршрутизацию через аннотации
 use Symfony\Component\Routing\Annotation\Route;
 
-class MainController
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+class MainController extends Controller
 {
 
     /**
@@ -36,6 +40,14 @@ class MainController
         }
     }
 
+    /*private $router;
+
+    public function __construct(UrlGeneratorInterface $router)
+    {
+        $this->router = $router;
+    }*/
+
+
     /**
      * @Route("/main/test")
      */
@@ -43,8 +55,10 @@ class MainController
     {
         $number = mt_rand(0, 1000);
 
+        //$url = $this->router->generate('main_index', array('locales' => 'ru', 'year' => '2000', 'slug' => 'posts'));
+        //альтернатива twig {{ path('main_index', {'locales' => 'ru', 'year' => '2000', 'slug' => 'posts'})}}
         return new Response(
-            '<html><body><b>Сгенерированное число: </b> '.$number.'</body>'
+            '<html><body><b>Сгенерированное число: </b> '.$number.'<br> <a href="'.$url.'">на главную страницу</a></body>'
         );
     }
 
@@ -56,9 +70,7 @@ class MainController
 
     public function list($page = 1)
     {
-        return new Response(
-            '<html><body><b>Вы перешли на страницу № '.$page.'</b></body>'
-        );
+        return $this->render('main/list.html.twig', array('page'=> $page));
     }
 
     /**

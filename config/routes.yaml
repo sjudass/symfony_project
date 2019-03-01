@@ -15,3 +15,13 @@ main_list:
 main_show:
     path: /main/{slug}
     controller: App\Controller\MainController::show
+main_index:
+    path: /main/{locales}/{year}/{slug}.{format}
+    controller: App\Controller\MainController::index
+    defaults:
+        format: 'html'
+        locales: 'ru'
+    requirements:
+        locales: '%app.locales%'
+        year: '\d+'
+        format: 'html|rss'
