@@ -1,3 +1,17 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+main_randomizer:
+    path: /main/randomizer
+    controller: App\Controller\MainController::randomizer
+main_list:
+    path: /main/{page}
+    controller: App\Controller\MainController::list
+    defaults:
+        page: 1
+    requirements:
+        page: '\d+'
+main_show:
+    path: /main/{slug}
+    controller: App\Controller\MainController::show
