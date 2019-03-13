@@ -12,6 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+use Psr\Log\LoggerInterface;
+
 class MainController extends Controller
 {
 
@@ -26,7 +28,7 @@ class MainController extends Controller
      *     }
      * )
      */
-    public function index($locale, $year, $slug, $format)
+    public function locale($locale, $year, $slug, $format)
     {
         if ($locale == 'en') {
             return new Response(
@@ -40,6 +42,22 @@ class MainController extends Controller
         }
     }
 
+    /**
+     * @Route("/main/index", name="app_main_index")
+     */
+
+    public function index(LoggerInterface $logger)
+    {
+        if ($_SERVER["REQUEST_METHOD"] == 'POST'){
+            $name = $_POST['name'];
+            return $this->render('base.html.twig', ['name' => $name]);
+        }
+
+        $logger->info('We are logging!');
+
+        return $this->render('base.html.twig');
+    }
+
     /*private $router;
 
     public function __construct(UrlGeneratorInterface $router)
@@ -49,17 +67,39 @@ class MainController extends Controller
 
 
     /**
-     * @Route("/main/test")
+     * @Route("/main/test", name="main_test")
      */
     public function randomizer()
     {
         $number = mt_rand(0, 1000);
-
+        $url = $this->generateUrl('main_index', array('locales' => 'ru', 'year' => '2000', 'slug' => 'posts'));
         //$url = $this->router->generate('main_index', array('locales' => 'ru', 'year' => '2000', 'slug' => 'posts'));
         //альтернатива twig {{ path('main_index', {'locales' => 'ru', 'year' => '2000', 'slug' => 'posts'})}}
         return new Response(
             '<html><body><b>Сгенерированное число: </b> '.$number.'<br> <a href="'.$url.'">на главную страницу</a></body>'
         );
+    }
+
+    /**
+     * @Route("/main/redirected", name="app_main_redirected")
+     */
+
+    public function redirected()
+    {
+        //Перенаправить по маршруту "homepage"
+        //return $this->redirectToRoute('main_test');
+
+        //redirecToRoute - это ярлык для:
+        //вернуть новый RedirectResponse($this->generateUrl('homepage');
+
+        //совершить постоянное перенаправление - 301
+        //return $this->redirectToRoute('main_test', array(), 301);
+
+        //перенаправить по маршруту с параметрами
+        //return $this->redirectToRoute('main_index', array('locales' => 'en', 'year' => '2019', 'slug' => 'redirect', 'format' => 'rss'));
+
+        //перенаправление внутренне
+        return $this->redirect('https://vk.com/sjudass');
     }
 
     /**
@@ -70,7 +110,8 @@ class MainController extends Controller
 
     public function list($page = 1)
     {
-        return $this->render('main/list.html.twig', array('page'=> $page));
+
+        return $this->render('main/index.html.twig', array('page'=> $page));
     }
 
     /**

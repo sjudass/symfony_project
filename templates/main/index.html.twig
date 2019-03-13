@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to the main page{% endblock %}
+
+{% block body %}
+    {% for entry in main_entries %}
+        <h2>{{ entry.title }}</h2>
+        <p>{{ entry.body }}</p>
+    {% endfor %}
+{% endblock %}

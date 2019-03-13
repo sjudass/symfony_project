@@ -2,11 +2,38 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <title>{% block title %}Test Application{% endblock %}</title>
+        {% block stylesheets %}
+            <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+        {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        <div id="sidebar">
+            {% block sidebar %}
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/main">Main</a></li>
+                    <li><a href="{{ path('main_test') }}">Test</a> </li>
+                </ul>
+                <img src="{{ asset('images/logo.png') }}" alt="Not found!">
+            {% endblock %}
+        </div>
+
+        <div id="content">
+            {% block body %}
+                {% if name is defined %}
+                        <h1>Добро пожаловать, {{ name}}</h1>
+                {% else %}
+                    <form action="index" method="post">
+                        <input name="name" title="Name">
+                        <button type="submit">Confirm</button>
+                    </form>
+                {% endif %}
+            {% endblock %}
+        </div>
+
+        {% block javascripts %}
+            <script src="{{ asset('js/main.js') }}"></script>
+        {% endblock %}
     </body>
 </html>
